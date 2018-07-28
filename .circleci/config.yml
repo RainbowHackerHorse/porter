@@ -4,6 +4,8 @@ jobs:
     working_directory: ~/porter_testing
     machine:
       enabled: false
+    docker:
+      enabled: true
     steps:
       - checkout
       - run:
