@@ -5,7 +5,7 @@ jobs:
     machine:
       enabled: false
     docker:
-      enabled: true
+      - image: circleci/builder-base
     steps:
       - checkout
       - run:
