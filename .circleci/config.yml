@@ -2,8 +2,6 @@ version: 2
 jobs:
   testbootstrapuser:
     working_directory: ~/porter_testing
-    machine:
-      enabled: false
     docker:
       - image: circleci/builder-base
     steps:
@@ -12,8 +10,8 @@ jobs:
           name: Deps
           command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
-          name: pkgsrcshellfix
-          command: export SH=/bin/bash
+          name: shittyworkaroundfortestingincircleci
+          command: rm /bin/sh && ln -s /bin/bash /bin/sh
       - run:
           name: TestUserBootstrap
           command: ~/porter_testing/bin/porter bootstrap --set-usertree=yes
@@ -27,27 +25,14 @@ jobs:
           name: Deps
           command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
-          name: pkgsrcshellfix
-          command: export SH=/bin/bash
+          name: shittyworkaroundfortestingincircleci
+          command: rm /bin/sh && ln -s /bin/bash /bin/sh
       - run:
           name: TestGlobalBootstrap
           command: sudo ~/porter_testing/bin/porter bootstrap
-#  testbootstrapmac:
- #   macos:
-  #    xcode: "9.3.0"
-   # working_directory: ~/porter_testing
-    #steps:
-     # - checkout
-      #- run:
-       #   name: XCodeInstall
-        #  command: echo "Placeholder"
-      #- run:
-       #   name: TestUserBootstrap
-        #  command: export SH=/bin/bash && ~/porter_testing/bin/porter bootstrap --set-usertree=yes
 workflows:
   version: 2
   Testflow:
     jobs:
       - testbootstrapuser
       - testbootstrapglobal
-    #  - testbootstrapmac
