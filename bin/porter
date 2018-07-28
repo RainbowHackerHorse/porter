@@ -19,12 +19,12 @@ main() {
 	fi
 	porter_setvar
 	porter_getarg "$@"
-	porter_set_treetype
 	if [ "${set_porter_bootstrap}" = "YES" ]; then
 		echo "Bootstrapping pkgsrc..."
 		porter_bootstrap
 		return 0
 	fi
+	porter_set_treetype
 	if [ "${set_porter_update}" = "YES" ]; then
 		echo "Updating pkgsrc..."
 		porter_update
