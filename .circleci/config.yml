@@ -28,7 +28,7 @@ jobs:
           command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
           name: pkgsrcshellfix
-         command: export SH=/bin/bash
+          command: export SH=/bin/bash
       - run:
           name: TestGlobalBootstrap
           command: sudo ~/porter_testing/bin/porter bootstrap
