@@ -39,6 +39,7 @@ jobs:
           name: TestUserBootstrap
           command: export SH=/bin/bash && ~/porter_testing/bin/porter bootstrap --set-usertree=yes
 workflows:
+  version: 2
   Testflow:
     jobs:
       - testbootstrapuser
