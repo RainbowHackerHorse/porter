@@ -48,12 +48,10 @@ porter_getarg() {
 		case $1 in
 			update)
 				set_porter_update="YES"
-				exit
 			;;
 			upgrade)
 				set_porter_update="YES"
 				set_porter_upgrade="YES"
-				exit
 			;;
 			bootstrap)
 				set_porter_bootstrap="YES"
