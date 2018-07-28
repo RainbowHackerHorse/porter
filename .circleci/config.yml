@@ -10,7 +10,7 @@ jobs:
       - checkout
       - run:
           name: Deps
-          command: apt-get update && apt-get install -y curl gcc
+          command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
           name: TestUserBootstrap
           command: export SH=/bin/bash && ~/porter_testing/bin/porter bootstrap --set-usertree=yes
@@ -22,10 +22,10 @@ jobs:
       - checkout
       - run:
           name: Deps
-          command: apt-get update && apt-get install -y curl gcc
+          command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
           name: TestGlobalBootstrap
-          command: export SH=/bin/bash && sudo ~/porter_testing/bin/porter bootstrap
+          command: export SH=/bin/bash && sudo bash ~/porter_testing/bin/porter bootstrap
 #  testbootstrapmac:
  #   macos:
   #    xcode: "9.3.0"
