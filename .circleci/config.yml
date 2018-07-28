@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/porter_testing
     machine:
-      enabled: true
+      enabled: false
     steps:
       - checkout
       - run:
