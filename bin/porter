@@ -120,6 +120,8 @@ porter_bootstrap() {
 porter_checkOS() {
 	if [ "$(uname -s)" = "Darwin" ]; then
 		porter_bootstrap_osx
+	elif [ "$(uname -s)" = "NetBSD" ]; then
+		porter_bootstrap_NetBSD
 	else
 		porter_bootstrap_UNIX
 	fi
@@ -127,11 +129,18 @@ porter_checkOS() {
 porter_bootstrap_osx() {
 	./bootstrap --abi=64 --prefer-pkgsrc=yes --unprivileged
 }
-porter_bootstrap_UNIX() {
+porter_bootstrap_NetBSD() {
 	if [ "${porter_type}" = USER ]; then
 		./bootstrap --unprivileged
 	elif [ "${porter_type}" = GLOBAL ]; then
 		./bootstrap
+	fi
+}
+porter_bootstrap_UNIX() {
+	if [ "${porter_type}" = USER ]; then
+		./bootstrap --unprivileged
+	elif [ "${porter_type}" = GLOBAL ]; then
+		./bootstrap --prefix /usr/local
 	fi
 }
 main "$@"
