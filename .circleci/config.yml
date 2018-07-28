@@ -26,22 +26,22 @@ jobs:
       - run:
           name: TestGlobalBootstrap
           command: export SH=/bin/bash && sudo ~/porter_testing/bin/porter bootstrap
-  testbootstrapmac:
-    macos:
-      xcode: "9.3.0"
-    working_directory: ~/porter_testing
-    steps:
-      - checkout
-      - run:
-          name: XCodeInstall
-          command: echo "Placeholder"
-      - run:
-          name: TestUserBootstrap
-          command: export SH=/bin/bash && ~/porter_testing/bin/porter bootstrap --set-usertree=yes
+#  testbootstrapmac:
+ #   macos:
+  #    xcode: "9.3.0"
+   # working_directory: ~/porter_testing
+    #steps:
+     # - checkout
+      #- run:
+       #   name: XCodeInstall
+        #  command: echo "Placeholder"
+      #- run:
+       #   name: TestUserBootstrap
+        #  command: export SH=/bin/bash && ~/porter_testing/bin/porter bootstrap --set-usertree=yes
 workflows:
   version: 2
   Testflow:
     jobs:
       - testbootstrapuser
       - testbootstrapglobal
-      - testbootstrapmac
+    #  - testbootstrapmac
