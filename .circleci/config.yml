@@ -13,7 +13,7 @@ jobs:
           command: apt-get update && apt-get install -y curl
       - run:
           name: TestUserBootstrap
-          command: ~/porter_testing/bin/porter bootstrap --set-usertree=yes
+          command: export SH=/bin/bash && ~/porter_testing/bin/porter bootstrap --set-usertree=yes
       - run:
           name: TestGlobalBootstrap
-          command: sudo ~/porter_testing/bin/porter bootstrap
+          command: export SH=/bin/bash && sudo ~/porter_testing/bin/porter bootstrap
