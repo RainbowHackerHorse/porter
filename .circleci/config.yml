@@ -12,8 +12,11 @@ jobs:
           name: Deps
           command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
+        name: pkgsrc shell fix
+        command: export SH=/bin/bash
+      - run:
           name: TestUserBootstrap
-          command: export SH=/bin/bash && ~/porter_testing/bin/porter bootstrap --set-usertree=yes
+          command: ~/porter_testing/bin/porter bootstrap --set-usertree=yes
   testbootstrapglobal:
     working_directory: ~/porter_testing
     docker:
@@ -24,8 +27,11 @@ jobs:
           name: Deps
           command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
+        name: pkgsrc shell fix
+        command: export SH=/bin/bash
+      - run:
           name: TestGlobalBootstrap
-          command: export SH=/bin/bash && sudo bash ~/porter_testing/bin/porter bootstrap
+          command: sudo ~/porter_testing/bin/porter bootstrap
 #  testbootstrapmac:
  #   macos:
   #    xcode: "9.3.0"
