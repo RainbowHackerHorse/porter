@@ -12,8 +12,8 @@ jobs:
           name: Deps
           command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
-        name: pkgsrc shell fix
-        command: export SH=/bin/bash
+          name: pkgsrcshellfix
+          command: export SH=/bin/bash
       - run:
           name: TestUserBootstrap
           command: ~/porter_testing/bin/porter bootstrap --set-usertree=yes
@@ -27,8 +27,8 @@ jobs:
           name: Deps
           command: apt-get update && apt-get install -y curl gcc build-essential
       - run:
-        name: pkgsrc shell fix
-        command: export SH=/bin/bash
+          name: pkgsrcshellfix
+         command: export SH=/bin/bash
       - run:
           name: TestGlobalBootstrap
           command: sudo ~/porter_testing/bin/porter bootstrap
