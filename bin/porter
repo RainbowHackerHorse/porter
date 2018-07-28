@@ -111,9 +111,9 @@ porter_bootstrap() {
 	cd "${porter_bootstrap_dir}"/pkgsrc/bootstrap/
 	porter_checkOS
 	cd "${porter_bootstrap_dir}"/pkgsrc/pkgtools/pkg_rolling-replace
-	"${porter_bootstrap_dir}"/pkg/bin/bmake install clean
+	"${porter_tree_dir}"/bin/bmake install clean
 	cd "${porter_bootstrap_dir}"/pkgsrc/devel/scmcvs
-	"${porter_bootstrap_dir}"/pkg/bin/bmake install clean
+	"${porter_tree_dir}"/bin/bmake install clean
 	echo "pkgsrc has been bootstrapped"
 	return 0
 }
@@ -130,12 +130,14 @@ porter_checkOS() {
 }
 porter_bootstrap_osx() {
 	./bootstrap --abi=64 --prefer-pkgsrc=yes --unprivileged
+	porter_tree_dir="$HOME/pkg"
 }
 porter_bootstrap_NetBSD() {
 	if [ "${porter_type}" = USER ]; then
 		./bootstrap --unprivileged
 	elif [ "${porter_type}" = GLOBAL ]; then
 		./bootstrap
+		porter_tree_dir="/usr/pkg"
 	fi
 }
 porter_bootstrap_Sanity() {
@@ -143,6 +145,7 @@ porter_bootstrap_Sanity() {
 		./bootstrap --unprivileged
 	elif [ "${porter_type}" = GLOBAL ]; then
 		./bootstrap --prefix /usr/local
+		porter_tree_dir="/usr/local"
 	fi
 }
 porter_bootstrap_UNIX() {
@@ -150,6 +153,7 @@ porter_bootstrap_UNIX() {
 		./bootstrap --unprivileged
 	elif [ "${porter_type}" = GLOBAL ]; then
 		./bootstrap --prefix /usr/local/pkg
+		porter_tree_dir="/usr/local/pkg"
 	fi
 }
 main "$@"
