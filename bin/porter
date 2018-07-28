@@ -122,6 +122,8 @@ porter_checkOS() {
 		porter_bootstrap_osx
 	elif [ "$(uname -s)" = "NetBSD" ]; then
 		porter_bootstrap_NetBSD
+	elif [ "$(uname -s)" = "Linux" ]; then
+		porter_bootstrap_Sanity
 	else
 		porter_bootstrap_UNIX
 	fi
@@ -136,11 +138,18 @@ porter_bootstrap_NetBSD() {
 		./bootstrap
 	fi
 }
-porter_bootstrap_UNIX() {
+porter_bootstrap_Sanity() {
 	if [ "${porter_type}" = USER ]; then
 		./bootstrap --unprivileged
 	elif [ "${porter_type}" = GLOBAL ]; then
 		./bootstrap --prefix /usr/local
+	fi
+}
+porter_bootstrap_UNIX() {
+	if [ "${porter_type}" = USER ]; then
+		./bootstrap --unprivileged
+	elif [ "${porter_type}" = GLOBAL ]; then
+		./bootstrap --prefix /usr/local/pkg
 	fi
 }
 main "$@"
