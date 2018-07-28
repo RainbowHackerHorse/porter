@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/porter_testing
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - run:
+          name: TestUserBootstrap
+          command: ~/porter_testing/bin/porter bootstrap --set-usertree=yes
+      - run:
+          name: TestGlobalBootstrap
+          command: sudo ~/porter_testing/bin/porter bootstrap
