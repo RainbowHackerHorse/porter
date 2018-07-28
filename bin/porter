@@ -1,0 +1,140 @@
+#!/bin/sh
+usage() {
+	cat <<EOF
+usage: porter (update/upgrade/bootstrap)
+Commands:
+	update				Update pkgsrc
+	upgrade				Upgrade installed ports
+	bootstrap			bootstrap the pkgsrc tree
+Arguments:
+	--set-usertree=yes	Use a pkgsrc tree in your HOME dir
+see man 8 porter for more information
+EOF
+	exit 0
+}
+
+main() {
+	if [ "${1}" = "" ]; then
+		usage
+	fi
+	porter_setvar
+	porter_getarg "$@"
+	porter_set_treetype
+	if [ "${set_porter_bootstrap}" = "YES" ]; then
+		echo "Bootstrapping pkgsrc..."
+		porter_bootstrap
+		return 0
+	fi
+	if [ "${set_porter_update}" = "YES" ]; then
+		echo "Updating pkgsrc..."
+		porter_update
+	fi
+	if [ "${set_porter_upgrade}" = "upgrade" ]; then
+		echo "Upgrading Installed Packages..."
+		porter_upgrade	
+	fi
+	return 0
+}
+
+porter_setvar(){
+	set_porter_update="NO"
+	set_porter_update="NO"
+	set_porter_update="NO"
+	porter_type="GLOBAL"
+}
+
+porter_getarg() {
+	while :; do
+		case $1 in
+			update)
+				set_porter_update="YES"
+				exit
+			;;
+			upgrade)
+				set_porter_update="YES"
+				set_porter_upgrade="YES"
+				exit
+			;;
+			bootstrap)
+				set_porter_bootstrap="YES"
+			;;
+#			status)
+#				porter_status
+#			;;
+			--set-usertree=yes)
+				porter_type="USER"
+			;;
+			*)
+				break
+		esac
+		shift
+	done
+}
+
+porter_set_treetype() {
+	if [ "${porter_type}" = USER ]; then
+		if [ ! -d "${HOME}/pkgsrc" ]; then
+			echo "Warning, no user pkgsrc tree in ${HOME}"
+			echo "Try running porter bootstrap --set-usertree=yes"
+			return 1
+		fi
+		porter_tree="${HOME}/pkgsrc"
+	elif [ "${porter_type}" = GLOBAL ]; then
+		if [ ! -d "/usr/local/pkgsrc" ]; then
+			echo "Warning, no global pkgsrc tree in /usr/local"
+			echo "Try running porter bootstrap"
+			return 1
+		fi
+		porter_tree="/usr/local/pkgsrc"	
+	fi
+}
+
+porter_update() {
+	cd "$porter_tree"
+	env CVS_RSH=ssh cvs up -dP
+}
+porter_upgrade() {
+	cd "$porter_tree"
+	pkg_rolling-replace -rsuv
+}
+porter_bootstrap() {
+	if [ "${porter_type}" = USER ]; then
+		porter_bootstrap_dir="$HOME"
+	elif [ "${porter_type}" = GLOBAL ]; then
+		porter_bootstrap_dir="/usr/local"
+	else
+		echo "Error. Somehow no location is set for bootstrap."
+		echo "Hard exiting. Please open an issue on GitHub"
+		exit 1
+	fi
+	cd "${porter_bootstrap_dir}"
+	curl -OL http://ftp.netbsd.org/pub/pkgsrc/stable/pkgsrc.tar.bz2
+	tar xvfj pkgsrc.tar.bz2
+	cd "${porter_bootstrap_dir}"/pkgsrc/bootstrap/
+	porter_checkOS
+	cd "${porter_bootstrap_dir}"/pkgsrc/pkgtools/pkg_rolling-replace
+	"${porter_bootstrap_dir}"/pkg/bin/bmake install clean
+	cd "${porter_bootstrap_dir}"/pkgsrc/devel/scmcvs
+	"${porter_bootstrap_dir}"/pkg/bin/bmake install clean
+	echo "pkgsrc has been bootstrapped"
+	return 0
+}
+porter_checkOS() {
+	if [ "$(uname -s)" = "Darwin" ]; then
+		porter_bootstrap_osx
+	else
+		porter_bootstrap_UNIX
+	fi
+}
+porter_bootstrap_osx() {
+	./bootstrap --abi=64 --prefer-pkgsrc=yes --unprivileged
+}
+porter_bootstrap_UNIX() {
+	if [ "${porter_type}" = USER ]; then
+		./bootstrap --unprivileged
+	elif [ "${porter_type}" = GLOBAL ]; then
+		./bootstrap
+	fi
+}
+main "$@"
+exit
